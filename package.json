@@ -1,0 +1,8 @@
+{
+  "dependencies": {
+    "dotenv": "^17.4.2",
+    "mysql2": "^3.23.2",
+    "nodemailer": "^9.0.5",
+    "pdfkit": "^0.19.1"
+  }
+}
