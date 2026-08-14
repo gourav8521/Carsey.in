@@ -1,0 +1,1224 @@
+<div
+  class="min-h-screen bg-slate-50 p-4 md:p-6 text-slate-900"
+>
+
+  <!-- ================================================= -->
+  <!-- HEADER -->
+  <!-- ================================================= -->
+
+  <div
+    class="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-6"
+  >
+
+    <div>
+
+      <h1
+        class="m-0 text-2xl md:text-3xl font-extrabold"
+      >
+        Inspection Reports
+      </h1>
+
+      <p class="mt-1.5 text-slate-500">
+        Complete vehicle inspection reports
+      </p>
+
+    </div>
+
+
+    <button
+      type="button"
+      (click)="loadReports()"
+      class="cursor-pointer rounded-lg border-0 bg-slate-900 text-white px-4 py-2.5 font-semibold hover:bg-slate-800 transition"
+    >
+      🔄 Refresh
+    </button>
+
+  </div>
+
+
+  <!-- ================================================= -->
+  <!-- ERROR -->
+  <!-- ================================================= -->
+
+  <div
+    *ngIf="errorMessage"
+    class="mb-5 rounded-lg bg-red-100 border border-red-200 p-3.5 text-red-800"
+  >
+    {{ errorMessage }}
+  </div>
+
+
+  <!-- ================================================= -->
+  <!-- REPORT LIST -->
+  <!-- ================================================= -->
+
+  <div *ngIf="!selectedReport">
+
+    <!-- FILTER BAR -->
+
+    <div
+      class="flex flex-col md:flex-row gap-3 mb-5"
+    >
+
+      <input
+        type="text"
+        placeholder="Search Report ID or Car ID..."
+        [(ngModel)]="searchText"
+        class="w-full md:w-80 h-[42px] rounded-lg border border-slate-300 bg-white px-3.5 outline-none focus:border-slate-900 focus:ring-1 focus:ring-slate-900"
+      />
+
+
+      <select
+        [(ngModel)]="statusFilter"
+        class="h-[42px] rounded-lg border border-slate-300 bg-white px-3.5 outline-none focus:border-slate-900 focus:ring-1 focus:ring-slate-900"
+      >
+
+        <option value="All">
+          All
+        </option>
+
+        <option value="Yes">
+          Published
+        </option>
+
+        <option value="No">
+          Not Published
+        </option>
+
+      </select>
+
+    </div>
+
+
+    <!-- ================================================= -->
+    <!-- LOADING -->
+    <!-- ================================================= -->
+
+    <div
+      *ngIf="loading"
+      class="text-center py-16 text-slate-500"
+    >
+
+      <div class="text-4xl mb-3">
+        ⏳
+      </div>
+
+      Loading reports...
+
+    </div>
+
+
+    <!-- ================================================= -->
+    <!-- EMPTY -->
+    <!-- ================================================= -->
+
+    <div
+      *ngIf="
+        !loading &&
+        filteredReports().length === 0
+      "
+      class="text-center py-16 px-5 bg-white rounded-xl border border-slate-200"
+    >
+
+      <div class="text-5xl mb-3">
+        📄
+      </div>
+
+      <h3 class="text-xl font-bold text-slate-800">
+        No Reports Found
+      </h3>
+
+      <p class="mt-2 text-slate-500">
+        Inspection reports will appear here.
+      </p>
+
+    </div>
+
+
+    <!-- ================================================= -->
+    <!-- TABLE -->
+    <!-- ================================================= -->
+
+    <div
+      *ngIf="
+        !loading &&
+        filteredReports().length > 0
+      "
+      class="overflow-x-auto rounded-xl border border-slate-200 bg-white"
+    >
+
+      <table
+        class="w-full border-collapse min-w-[850px]"
+      >
+
+        <thead
+          class="bg-slate-900 text-white"
+        >
+
+          <tr>
+
+            <th
+              class="px-4 py-3.5 text-left font-semibold"
+            >
+              Report ID
+            </th>
+
+            <th
+              class="px-4 py-3.5 text-left font-semibold"
+            >
+              Car ID
+            </th>
+
+            <th
+              class="px-4 py-3.5 text-left font-semibold"
+            >
+              Score
+            </th>
+
+            <th
+              class="px-4 py-3.5 text-left font-semibold"
+            >
+              Publish Status
+            </th>
+
+            <th
+              class="px-4 py-3.5 text-left font-semibold"
+            >
+              Created
+            </th>
+
+            <th
+              class="px-4 py-3.5 text-left font-semibold"
+            >
+              Action
+            </th>
+
+          </tr>
+
+        </thead>
+
+
+        <tbody>
+
+          <tr
+            *ngFor="
+              let report of filteredReports()
+            "
+            class="hover:bg-slate-50 transition"
+          >
+
+            <td
+              class="px-4 py-3.5 border-b border-slate-200 font-semibold"
+            >
+              #{{ report.report_id }}
+            </td>
+
+
+            <td
+              class="px-4 py-3.5 border-b border-slate-200"
+            >
+              #{{ report.car_id }}
+            </td>
+
+
+            <td
+              class="px-4 py-3.5 border-b border-slate-200"
+            >
+
+              <span class="font-extrabold">
+                {{ report.overall_score || 0 }}
+              </span>
+
+              / 10
+              
+
+            </td>
+
+
+            <td
+              class="px-4 py-3.5 border-b border-slate-200"
+            >
+
+              <span
+                *ngIf="
+                  report.publish_status === 'Yes'
+                "
+                class="rounded-full bg-green-100 text-green-800 px-2.5 py-1 text-xs font-bold"
+              >
+                Published
+              </span>
+
+
+              <span
+                *ngIf="
+                  report.publish_status !== 'Yes'
+                "
+                class="rounded-full bg-amber-100 text-amber-800 px-2.5 py-1 text-xs font-bold"
+              >
+                Not Published
+              </span>
+
+            </td>
+
+
+            <td
+              class="px-4 py-3.5 border-b border-slate-200"
+            >
+              {{ formatDate(report.created_at) }}
+            </td>
+
+
+            <td
+              class="px-4 py-3.5 border-b border-slate-200"
+            >
+
+              <button
+                type="button"
+                (click)="openReport(report)"
+                class="cursor-pointer rounded-lg bg-blue-600 text-white px-4 py-2 font-semibold hover:bg-blue-700 transition"
+              >
+                👁 View Report
+              </button>
+
+            </td>
+
+          </tr>
+
+        </tbody>
+
+      </table>
+
+    </div>
+
+  </div>
+
+
+  <!-- ================================================= -->
+  <!-- COMPLETE REPORT -->
+  <!-- ================================================= -->
+
+  <div *ngIf="selectedReport">
+
+    <!-- ================================================= -->
+    <!-- REPORT ACTIONS -->
+    <!-- ================================================= -->
+
+    <div
+      class="flex flex-col sm:flex-row justify-between gap-3 mb-5"
+    >
+
+      <button
+        type="button"
+        (click)="closeReport()"
+        class="cursor-pointer rounded-lg border border-slate-300 bg-white text-slate-700 px-4 py-2.5 font-semibold hover:bg-slate-50 transition"
+      >
+        ← Back to Reports
+      </button>
+
+
+      <button
+        type="button"
+        (click)="printReport()"
+        class="cursor-pointer rounded-lg border-0 bg-green-600 text-white px-4 py-2.5 font-semibold hover:bg-green-700 transition"
+      >
+        🖨 Print / Save PDF
+      </button>
+
+    </div>
+
+
+    <!-- ================================================= -->
+    <!-- REPORT CARD -->
+    <!-- ================================================= -->
+
+    <div
+      id="print-report"
+      class="mx-auto max-w-6xl overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm"
+    >
+
+      <!-- ================================================= -->
+      <!-- REPORT HEADER -->
+      <!-- ================================================= -->
+
+      <div
+        class="flex flex-col md:flex-row md:items-center md:justify-between gap-4 border-b border-slate-200 p-6 md:p-7"
+      >
+
+        <div>
+
+          <h2
+            class="m-0 text-2xl md:text-3xl font-extrabold"
+          >
+            Carsey.in
+          </h2>
+
+          <p class="mt-1 text-slate-500">
+            Vehicle Inspection Report
+          </p>
+
+        </div>
+
+
+        <div class="text-left md:text-right">
+
+          <strong
+            class="block text-xs text-slate-500"
+          >
+            Car ID
+          </strong>
+
+          <span
+            class="text-xl font-extrabold"
+          >
+            #{{ selectedReport.vehicle.car_id }}
+          </span>
+
+        </div>
+
+      </div>
+
+
+      <!-- ================================================= -->
+      <!-- VEHICLE DETAILS -->
+      <!-- ================================================= -->
+
+      <section
+        class="border-b border-slate-200 px-5 md:px-7 py-6"
+      >
+
+        <div
+          class="mb-5 text-xl font-extrabold"
+        >
+          🚗 Vehicle Details
+        </div>
+
+
+        <div
+          class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3.5"
+        >
+
+          <!-- Brand -->
+
+          <div
+            class="rounded-lg border border-slate-200 bg-slate-50 p-3.5"
+          >
+
+            <label
+              class="mb-1 block text-xs font-semibold text-slate-500"
+            >
+              Brand
+            </label>
+
+            <span
+              class="block break-words text-sm font-semibold"
+            >
+              {{ selectedReport.vehicle.brand || '-' }}
+            </span>
+
+          </div>
+
+
+          <!-- Model -->
+
+          <div
+            class="rounded-lg border border-slate-200 bg-slate-50 p-3.5"
+          >
+
+            <label
+              class="mb-1 block text-xs font-semibold text-slate-500"
+            >
+              Model
+            </label>
+
+            <span
+              class="block break-words text-sm font-semibold"
+            >
+              {{ selectedReport.vehicle.model || '-' }}
+            </span>
+
+          </div>
+
+
+          <!-- Variant -->
+
+          <div
+            class="rounded-lg border border-slate-200 bg-slate-50 p-3.5"
+          >
+
+            <label
+              class="mb-1 block text-xs font-semibold text-slate-500"
+            >
+              Variant
+            </label>
+
+            <span
+              class="block break-words text-sm font-semibold"
+            >
+              {{ selectedReport.vehicle.variant || '-' }}
+            </span>
+
+          </div>
+
+
+          <!-- Manufacturing Year -->
+
+          <div
+            class="rounded-lg border border-slate-200 bg-slate-50 p-3.5"
+          >
+
+            <label
+              class="mb-1 block text-xs font-semibold text-slate-500"
+            >
+              Manufacturing Year
+            </label>
+
+            <span
+              class="block break-words text-sm font-semibold"
+            >
+              {{
+                selectedReport.vehicle.manufacturing_year
+                || '-'
+              }}
+            </span>
+
+          </div>
+
+
+          <!-- Price -->
+
+          <div
+            class="rounded-lg border border-slate-200 bg-slate-50 p-3.5"
+          >
+
+            <label
+              class="mb-1 block text-xs font-semibold text-slate-500"
+            >
+              Price
+            </label>
+
+            <span
+              class="block break-words text-sm font-semibold"
+            >
+              {{
+                formatMoney(
+                  selectedReport.vehicle.price
+                )
+              }}
+            </span>
+
+          </div>
+
+
+          <!-- Price Note -->
+
+          <div
+            class="rounded-lg border border-slate-200 bg-slate-50 p-3.5"
+          >
+
+            <label
+              class="mb-1 block text-xs font-semibold text-slate-500"
+            >
+              Price Note
+            </label>
+
+            <span
+              class="block break-words text-sm font-semibold"
+            >
+              {{
+                selectedReport.vehicle.price_short_note
+                || '-'
+              }}
+            </span>
+
+          </div>
+
+
+          <!-- Odometer -->
+
+          <div
+            class="rounded-lg border border-slate-200 bg-slate-50 p-3.5"
+          >
+
+            <label
+              class="mb-1 block text-xs font-semibold text-slate-500"
+            >
+              Odometer
+            </label>
+
+            <span
+              class="block break-words text-sm font-semibold"
+            >
+              {{
+                selectedReport.vehicle.odometer
+                || '-'
+              }}
+              KM
+            </span>
+
+          </div>
+
+
+          <!-- Fuel -->
+
+          <div
+            class="rounded-lg border border-slate-200 bg-slate-50 p-3.5"
+          >
+
+            <label
+              class="mb-1 block text-xs font-semibold text-slate-500"
+            >
+              Fuel Type
+            </label>
+
+            <span
+              class="block break-words text-sm font-semibold"
+            >
+              {{
+                selectedReport.vehicle.fuel_type
+                || '-'
+              }}
+            </span>
+
+          </div>
+
+
+          <!-- Transmission -->
+
+          <div
+            class="rounded-lg border border-slate-200 bg-slate-50 p-3.5"
+          >
+
+            <label
+              class="mb-1 block text-xs font-semibold text-slate-500"
+            >
+              Transmission
+            </label>
+
+            <span
+              class="block break-words text-sm font-semibold"
+            >
+              {{
+                selectedReport.vehicle.transmission
+                || '-'
+              }}
+            </span>
+
+          </div>
+
+
+          <!-- Owner Classification -->
+
+          <div
+            class="rounded-lg border border-slate-200 bg-slate-50 p-3.5"
+          >
+
+            <label
+              class="mb-1 block text-xs font-semibold text-slate-500"
+            >
+              Owner Classification
+            </label>
+
+            <span
+              class="block break-words text-sm font-semibold"
+            >
+              {{
+                selectedReport.vehicle.owner_classification
+                || '-'
+              }}
+            </span>
+
+          </div>
+
+
+          <!-- Registration -->
+
+          <div
+            class="rounded-lg border border-slate-200 bg-slate-50 p-3.5"
+          >
+
+            <label
+              class="mb-1 block text-xs font-semibold text-slate-500"
+            >
+              Registration Number
+            </label>
+
+            <span
+              class="block break-words text-sm font-semibold"
+            >
+              {{
+                selectedReport.vehicle.registration_number
+                || '-'
+              }}
+            </span>
+
+          </div>
+
+
+          <!-- Chassis -->
+
+          <div
+            class="rounded-lg border border-slate-200 bg-slate-50 p-3.5"
+          >
+
+            <label
+              class="mb-1 block text-xs font-semibold text-slate-500"
+            >
+              Chassis Number
+            </label>
+
+            <span
+              class="block break-words text-sm font-semibold"
+            >
+              {{
+                selectedReport.vehicle.chassis_number
+                || '-'
+              }}
+            </span>
+
+          </div>
+
+
+          <!-- Engine -->
+
+          <div
+            class="rounded-lg border border-slate-200 bg-slate-50 p-3.5"
+          >
+
+            <label
+              class="mb-1 block text-xs font-semibold text-slate-500"
+            >
+              Engine Number
+            </label>
+
+            <span
+              class="block break-words text-sm font-semibold"
+            >
+              {{
+                selectedReport.vehicle.engine_number
+                || '-'
+              }}
+            </span>
+
+          </div>
+
+
+          <!-- City -->
+
+          <div
+            class="rounded-lg border border-slate-200 bg-slate-50 p-3.5"
+          >
+
+            <label
+              class="mb-1 block text-xs font-semibold text-slate-500"
+            >
+              City
+            </label>
+
+            <span
+              class="block break-words text-sm font-semibold"
+            >
+              {{
+                selectedReport.vehicle.city
+                || '-'
+              }}
+            </span>
+
+          </div>
+
+
+          <!-- Inspection Date -->
+
+          <div
+            class="rounded-lg border border-slate-200 bg-slate-50 p-3.5"
+          >
+
+            <label
+              class="mb-1 block text-xs font-semibold text-slate-500"
+            >
+              Inspection Date
+            </label>
+
+            <span
+              class="block break-words text-sm font-semibold"
+            >
+              {{
+                formatDate(
+                  selectedReport.vehicle.inspection_date
+                )
+              }}
+            </span>
+
+          </div>
+
+
+          <!-- RTO -->
+
+          <div
+            class="rounded-lg border border-slate-200 bg-slate-50 p-3.5"
+          >
+
+            <label
+              class="mb-1 block text-xs font-semibold text-slate-500"
+            >
+              RTO
+            </label>
+
+            <span
+              class="block break-words text-sm font-semibold"
+            >
+              {{
+                selectedReport.vehicle.rto
+                || '-'
+              }}
+            </span>
+
+          </div>
+
+
+          <!-- Spare Key -->
+
+          <div
+            class="rounded-lg border border-slate-200 bg-slate-50 p-3.5"
+          >
+
+            <label
+              class="mb-1 block text-xs font-semibold text-slate-500"
+            >
+              Spare Key
+            </label>
+
+            <span
+              class="block break-words text-sm font-semibold"
+            >
+              {{
+                selectedReport.vehicle.spare_key
+                || '-'
+              }}
+            </span>
+
+          </div>
+
+
+          <!-- Insurance Type -->
+
+          <div
+            class="rounded-lg border border-slate-200 bg-slate-50 p-3.5"
+          >
+
+            <label
+              class="mb-1 block text-xs font-semibold text-slate-500"
+            >
+              Insurance Type
+            </label>
+
+            <span
+              class="block break-words text-sm font-semibold"
+            >
+              {{
+                selectedReport.vehicle.insurance_type
+                || '-'
+              }}
+            </span>
+
+          </div>
+
+
+          <!-- Insurance Validity -->
+
+          <div
+            class="rounded-lg border border-slate-200 bg-slate-50 p-3.5"
+          >
+
+            <label
+              class="mb-1 block text-xs font-semibold text-slate-500"
+            >
+              Insurance Validity
+            </label>
+
+            <span
+              class="block break-words text-sm font-semibold"
+            >
+              {{
+                formatDate(
+                  selectedReport.vehicle.insurance_validity
+                )
+              }}
+            </span>
+
+          </div>
+
+
+          <!-- Vehicle Note -->
+
+          <div
+            class="sm:col-span-2 lg:col-span-3 rounded-lg border border-slate-200 bg-slate-50 p-3.5"
+          >
+
+            <label
+              class="mb-1 block text-xs font-semibold text-slate-500"
+            >
+              Vehicle Note
+            </label>
+
+            <span
+              class="block break-words text-sm font-semibold"
+            >
+              {{
+                selectedReport.vehicle.vehicle_note
+                || '-'
+              }}
+            </span>
+
+          </div>
+
+
+          <!-- Status -->
+
+          <div
+            class="rounded-lg border border-slate-200 bg-slate-50 p-3.5"
+          >
+
+            <label
+              class="mb-1 block text-xs font-semibold text-slate-500"
+            >
+              Status
+            </label>
+
+            <span
+              class="block break-words text-sm font-bold text-green-800"
+            >
+              {{
+                selectedReport.vehicle.status
+                || '-'
+              }}
+            </span>
+
+          </div>
+
+        </div>
+
+      </section>
+
+
+      <!-- ================================================= -->
+      <!-- OWNER DETAILS -->
+      <!-- PAN / CITY / STATE / PINCODE REMOVED -->
+      <!-- ================================================= -->
+
+      <section
+        class="border-b border-slate-200 px-5 md:px-7 py-6"
+      >
+
+        <div
+          class="mb-5 text-xl font-extrabold"
+        >
+          👤 Owner Details
+        </div>
+
+
+        <div
+          *ngIf="selectedReport.owner"
+          class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3.5"
+        >
+
+          <!-- Owner Name -->
+
+          <div
+            class="rounded-lg border border-slate-200 bg-slate-50 p-3.5"
+          >
+
+            <label
+              class="mb-1 block text-xs font-semibold text-slate-500"
+            >
+              Owner Name
+            </label>
+
+            <span
+              class="block text-sm font-semibold"
+            >
+              {{
+                selectedReport.owner.owner_name
+                || '-'
+              }}
+            </span>
+
+          </div>
+
+
+          <!-- Mobile -->
+
+          <div
+            class="rounded-lg border border-slate-200 bg-slate-50 p-3.5"
+          >
+
+            <label
+              class="mb-1 block text-xs font-semibold text-slate-500"
+            >
+              Mobile
+            </label>
+
+            <span
+              class="block text-sm font-semibold"
+            >
+              {{
+                selectedReport.owner.mobile
+                || '-'
+              }}
+            </span>
+
+          </div>
+
+
+          <!-- Email -->
+
+          <div
+            class="rounded-lg border border-slate-200 bg-slate-50 p-3.5"
+          >
+
+            <label
+              class="mb-1 block text-xs font-semibold text-slate-500"
+            >
+              Email
+            </label>
+
+            <span
+              class="block break-words text-sm font-semibold"
+            >
+              {{
+                selectedReport.owner.email
+                || '-'
+              }}
+            </span>
+
+          </div>
+
+
+          <!-- Address -->
+
+          <div
+            class="sm:col-span-2 lg:col-span-3 rounded-lg border border-slate-200 bg-slate-50 p-3.5"
+          >
+
+            <label
+              class="mb-1 block text-xs font-semibold text-slate-500"
+            >
+              Address
+            </label>
+
+            <span
+              class="block break-words text-sm font-semibold"
+            >
+              {{
+                selectedReport.owner.address
+                || '-'
+              }}
+            </span>
+
+          </div>
+
+        </div>
+
+
+        <div
+          *ngIf="!selectedReport.owner"
+          class="rounded-lg bg-slate-50 p-5 text-slate-500"
+        >
+          Owner information not available.
+        </div>
+
+      </section>
+
+
+      <!-- ================================================= -->
+      <!-- INSPECTION SUMMARY -->
+      <!-- ================================================= -->
+
+      <section
+        class="border-b border-slate-200 px-5 md:px-7 py-6"
+      >
+
+        <div
+          class="mb-5 text-xl font-extrabold"
+        >
+          🔍 Inspection Summary
+        </div>
+
+
+        <div
+          *ngIf="selectedReport.inspection"
+          class="grid grid-cols-1 lg:grid-cols-[180px_1fr_1fr] gap-4"
+        >
+
+          <!-- SCORE -->
+
+          <div
+            class="rounded-[10px] border border-slate-200 bg-slate-50 p-5"
+          >
+
+            <span
+              class="block text-sm text-slate-500"
+            >
+              Overall Score
+            </span>
+
+            <strong
+              class="mt-2 block text-3xl font-extrabold"
+            >
+              {{
+                selectedReport.inspection.overall_score
+                || 0
+              }}
+              / 10
+            </strong>
+
+          </div>
+
+
+          <!-- ENGINE -->
+
+          <div
+            class="rounded-[10px] border border-slate-200 bg-slate-50 p-5"
+          >
+
+            <h4
+              class="m-0 mb-2 font-bold"
+            >
+              Engine Remark
+            </h4>
+
+            <p
+              class="m-0 leading-6 text-slate-600"
+            >
+              {{
+                selectedReport.inspection.engine_remark
+                || '-'
+              }}
+            </p>
+
+          </div>
+
+
+          <!-- OVERALL -->
+
+          <div
+            class="rounded-[10px] border border-slate-200 bg-slate-50 p-5"
+          >
+
+            <h4
+              class="m-0 mb-2 font-bold"
+            >
+              Overall Remark
+            </h4>
+
+            <p
+              class="m-0 leading-6 text-slate-600"
+            >
+              {{
+                selectedReport.inspection.overall_remark
+                || '-'
+              }}
+            </p>
+
+          </div>
+
+        </div>
+
+
+        <div
+          *ngIf="!selectedReport.inspection"
+          class="rounded-lg bg-slate-50 p-5 text-slate-500"
+        >
+          Inspection information not available.
+        </div>
+
+      </section>
+
+
+      <!-- ================================================= -->
+      <!-- INSPECTION CHECKLIST -->
+      <!-- ================================================= -->
+
+      <section
+        class="border-b border-slate-200 px-5 md:px-7 py-6"
+      >
+
+        <div
+          class="mb-5 text-xl font-extrabold"
+        >
+          ✅ Inspection Checklist
+        </div>
+
+
+        <div
+          class="grid grid-cols-1 md:grid-cols-2 gap-4"
+        >
+
+          <div
+            *ngFor="
+              let checklist of checklistEntries()
+            "
+            class="check-card rounded-[10px] border border-slate-200 bg-white p-[18px]"
+          >
+
+            <div
+              class="flex items-center justify-between gap-3"
+            >
+
+              <h4
+                class="m-0 text-[15px] font-bold"
+              >
+                {{ checklist.title }}
+              </h4>
+
+
+              <span
+                class="rounded-full bg-green-100 px-2.5 py-1 text-[11px] font-bold text-green-800"
+              >
+                {{
+                  checklist.item.status
+                  || '-'
+                }}
+              </span>
+
+            </div>
+
+
+            <p
+              class="mb-0 mt-3 leading-6 text-slate-500"
+            >
+              {{
+                checklist.item.remark
+                || 'No remark available.'
+              }}
+            </p>
+
+          </div>
+
+        </div>
+
+      </section>
+
+
+      <!-- ================================================= -->
+      <!-- FOOTER -->
+      <!-- ================================================= -->
+
+      <div
+        class="flex flex-col sm:flex-row justify-between gap-2 p-5 text-xs text-slate-500"
+      >
+
+        <p class="m-0">
+          Generated by Carsey.in
+        </p>
+
+        <p class="m-0">
+          Vehicle Inspection Report
+        </p>
+
+      </div>
+
+    </div>
+
+  </div>
+
+</div>

@@ -1,0 +1,1634 @@
+<div class="min-h-screen bg-slate-100 p-4 md:p-6">
+
+  <!-- ========================================= -->
+  <!-- PAGE HEADER -->
+  <!-- ========================================= -->
+
+  <div class="mb-6 flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+
+    <div>
+      <h1 class="text-2xl font-bold text-slate-800 md:text-3xl">
+        Inspection Executive Portal
+      </h1>
+
+      <p class="mt-1 text-sm text-slate-500">
+        Add complete vehicle information and inspection details
+      </p>
+    </div>
+
+    <div class="flex flex-wrap gap-3">
+
+      <button
+        type="button"
+        class="rounded-lg bg-blue-50 px-4 py-2 text-sm font-semibold text-blue-600 hover:bg-blue-100"
+      >
+        DETAILED AUDIT FORM
+      </button>
+
+      <button
+        type="button"
+        (click)="resetForm()"
+        class="rounded-lg border border-red-200 bg-red-50 px-4 py-2 text-sm font-semibold text-red-600 hover:bg-red-100"
+      >
+        Reset Form
+      </button>
+
+    </div>
+
+  </div>
+
+
+  <!-- ========================================= -->
+  <!-- SUCCESS MESSAGE -->
+  <!-- ========================================= -->
+
+  @if (successMessage) {
+
+    <div class="mb-6 rounded-xl border border-green-200 bg-green-50 p-4">
+
+      <p class="font-semibold text-green-700">
+        {{ successMessage }}
+      </p>
+
+    </div>
+
+  }
+
+
+  <!-- ========================================= -->
+  <!-- ERROR MESSAGE -->
+  <!-- ========================================= -->
+
+  @if (errorMessage) {
+
+    <div class="mb-6 rounded-xl border border-red-200 bg-red-50 p-4">
+
+      <p class="font-semibold text-red-700">
+        {{ errorMessage }}
+      </p>
+
+    </div>
+
+  }
+
+
+  <!-- ========================================= -->
+  <!-- FORM -->
+  <!-- ========================================= -->
+
+  <form
+    #vehicleForm="ngForm"
+    (ngSubmit)="submitVehicle()"
+    class="space-y-6"
+  >
+
+
+    <!-- ======================================= -->
+    <!-- 1. VEHICLE BASIC PARAMETERS -->
+    <!-- ======================================= -->
+
+    <div class="rounded-2xl bg-white p-5 shadow-sm md:p-7">
+
+      <div class="mb-6 border-b border-slate-200 pb-4">
+
+        <h2 class="text-xl font-bold text-blue-600">
+          Vehicle Basic Parameters
+        </h2>
+
+      </div>
+
+
+      <div class="grid grid-cols-1 gap-5 md:grid-cols-2">
+
+
+        <!-- BRAND -->
+
+        <div>
+
+          <label class="mb-2 block text-sm font-semibold text-slate-600">
+            Brand / Make *
+          </label>
+
+          <input
+            type="text"
+            name="brand"
+            [(ngModel)]="vehicle.brand"
+            required
+            placeholder="e.g. Honda"
+            class="w-full rounded-lg border border-slate-300 bg-slate-50 px-4 py-3 text-slate-800 outline-none transition focus:border-blue-500 focus:bg-white focus:ring-2 focus:ring-blue-100"
+          >
+
+        </div>
+
+
+        <!-- MODEL -->
+
+        <div>
+
+          <label class="mb-2 block text-sm font-semibold text-slate-600">
+            Model Name *
+          </label>
+
+          <input
+            type="text"
+            name="model"
+            [(ngModel)]="vehicle.model"
+            required
+            placeholder="e.g. Civic"
+            class="w-full rounded-lg border border-slate-300 bg-slate-50 px-4 py-3 text-slate-800 outline-none transition focus:border-blue-500 focus:bg-white focus:ring-2 focus:ring-blue-100"
+          >
+
+        </div>
+
+
+        <!-- VARIANT -->
+
+        <div>
+
+          <label class="mb-2 block text-sm font-semibold text-slate-600">
+            Variant
+          </label>
+
+          <input
+            type="text"
+            name="variant"
+            [(ngModel)]="vehicle.variant"
+            placeholder="e.g. VTEC VX"
+            class="w-full rounded-lg border border-slate-300 bg-slate-50 px-4 py-3 text-slate-800 outline-none transition focus:border-blue-500 focus:bg-white focus:ring-2 focus:ring-blue-100"
+          >
+
+        </div>
+
+
+        <!-- MANUFACTURING YEAR -->
+
+        <div>
+
+          <label class="mb-2 block text-sm font-semibold text-slate-600">
+            Manufacturing Year *
+          </label>
+
+          <input
+            type="number"
+            name="manufacturing_year"
+            [(ngModel)]="vehicle.manufacturing_year"
+            required
+            placeholder="2026"
+            class="w-full rounded-lg border border-slate-300 bg-slate-50 px-4 py-3 text-slate-800 outline-none transition focus:border-blue-500 focus:bg-white focus:ring-2 focus:ring-blue-100"
+          >
+
+        </div>
+
+
+        <!-- PRICE -->
+
+        <div>
+
+          <label class="mb-2 block text-sm font-semibold text-slate-600">
+            Price (INR) *
+          </label>
+
+          <input
+            type="number"
+            name="price"
+            [(ngModel)]="vehicle.price"
+            required
+            placeholder="e.g. 850000"
+            class="w-full rounded-lg border border-slate-300 bg-slate-50 px-4 py-3 text-slate-800 outline-none transition focus:border-blue-500 focus:bg-white focus:ring-2 focus:ring-blue-100"
+          >
+
+        </div>
+
+
+        <!-- ODOMETER -->
+
+        <div>
+
+          <label class="mb-2 block text-sm font-semibold text-slate-600">
+            Odometer Reading (KM)
+          </label>
+
+          <input
+            type="number"
+            name="odometer"
+            [(ngModel)]="vehicle.odometer"
+            placeholder="e.g. 45000"
+            class="w-full rounded-lg border border-slate-300 bg-slate-50 px-4 py-3 text-slate-800 outline-none transition focus:border-blue-500 focus:bg-white focus:ring-2 focus:ring-blue-100"
+          >
+
+        </div>
+
+
+        <!-- CITY -->
+
+        <div>
+
+          <label class="mb-2 block text-sm font-semibold text-slate-600">
+            City Location *
+          </label>
+
+          <input
+            type="text"
+            name="city"
+            [(ngModel)]="vehicle.city"
+            required
+            placeholder="e.g. Mumbai"
+            class="w-full rounded-lg border border-slate-300 bg-slate-50 px-4 py-3 text-slate-800 outline-none transition focus:border-blue-500 focus:bg-white focus:ring-2 focus:ring-blue-100"
+          >
+
+        </div>
+
+
+        <!-- TRANSMISSION -->
+
+        <div>
+
+          <label class="mb-2 block text-sm font-semibold text-slate-600">
+            Transmission *
+          </label>
+
+          <select
+            name="transmission"
+            [(ngModel)]="vehicle.transmission"
+            class="w-full rounded-lg border border-slate-300 bg-slate-50 px-4 py-3 text-slate-800 outline-none focus:border-blue-500 focus:bg-white focus:ring-2 focus:ring-blue-100"
+          >
+
+            <option value="Manual">
+              Manual
+            </option>
+
+            <option value="Automatic">
+              Automatic
+            </option>
+
+            <option value="AMT">
+              AMT
+            </option>
+
+            <option value="CVT">
+              CVT
+            </option>
+
+            <option value="DCT">
+              DCT
+            </option>
+
+          </select>
+
+        </div>
+
+
+        <!-- FUEL -->
+
+        <div>
+
+          <label class="mb-2 block text-sm font-semibold text-slate-600">
+            Fuel Type *
+          </label>
+
+          <select
+            name="fuel_type"
+            [(ngModel)]="vehicle.fuel_type"
+            class="w-full rounded-lg border border-slate-300 bg-slate-50 px-4 py-3 text-slate-800 outline-none focus:border-blue-500 focus:bg-white focus:ring-2 focus:ring-blue-100"
+          >
+
+            <option value="Petrol">
+              Petrol
+            </option>
+
+            <option value="Diesel">
+              Diesel
+            </option>
+
+            <option value="CNG">
+              CNG
+            </option>
+
+            <option value="Electric">
+              Electric
+            </option>
+
+            <option value="Hybrid">
+              Hybrid
+            </option>
+
+          </select>
+
+        </div>
+
+      </div>
+
+    </div>
+
+
+
+    <!-- ======================================= -->
+    <!-- 2. CUSTOMER & INSPECTION -->
+    <!-- ======================================= -->
+
+    <div class="rounded-2xl bg-white p-5 shadow-sm md:p-7">
+
+      <div class="mb-6 border-b border-slate-200 pb-4">
+
+        <h2 class="text-xl font-bold text-blue-600">
+          Customer & Inspection Form Point Details
+        </h2>
+
+      </div>
+
+
+      <div class="grid grid-cols-1 gap-5 md:grid-cols-2">
+
+
+        <!-- CUSTOMER -->
+
+        <div>
+
+          <label class="mb-2 block text-sm font-semibold text-slate-600">
+            Customer Name (Cx Name)
+          </label>
+
+          <input
+            type="text"
+            name="customer_name"
+            [(ngModel)]="customer_name"
+            placeholder="e.g. Amit Kumar"
+            class="w-full rounded-lg border border-slate-300 bg-slate-50 px-4 py-3 outline-none focus:border-blue-500 focus:bg-white focus:ring-2 focus:ring-blue-100"
+          >
+
+        </div>
+
+
+        <!-- MOBILE -->
+
+        <div>
+
+          <label class="mb-2 block text-sm font-semibold text-slate-600">
+            Owner Mobile
+          </label>
+
+          <input
+            type="tel"
+            name="owner_mobile"
+            [(ngModel)]="owner_mobile"
+            placeholder="+91"
+            class="w-full rounded-lg border border-slate-300 bg-slate-50 px-4 py-3 outline-none focus:border-blue-500 focus:bg-white focus:ring-2 focus:ring-blue-100"
+          >
+
+        </div>
+
+
+<!-- CUSTOMER EMAIL -->
+
+<div>
+
+  <label class="mb-2 block text-sm font-semibold text-slate-600">
+    Customer Email
+  </label>
+
+  <input
+    type="email"
+    name="owner_email"
+    [(ngModel)]="owner_email"
+    placeholder="e.g. customer@gmail.com"
+    class="w-full rounded-lg border border-slate-300 bg-slate-50 px-4 py-3 outline-none focus:border-blue-500 focus:bg-white focus:ring-2 focus:ring-blue-100"
+  >
+
+</div>
+
+
+<!-- CUSTOMER ADDRESS -->
+
+<div class="md:col-span-2">
+
+  <label class="mb-2 block text-sm font-semibold text-slate-600">
+    Customer Address
+  </label>
+
+  <textarea
+    name="owner_address"
+    [(ngModel)]="owner_address"
+    rows="3"
+    placeholder="Enter complete customer address"
+    class="w-full rounded-lg border border-slate-300 bg-slate-50 px-4 py-3 outline-none focus:border-blue-500 focus:bg-white focus:ring-2 focus:ring-blue-100"
+  ></textarea>
+
+</div>
+        
+
+
+
+        
+
+
+
+        <!-- OWNER -->
+
+        <div>
+
+          <label class="mb-2 block text-sm font-semibold text-slate-600">
+            Owner Classification
+          </label>
+
+          <select
+            name="owner_classification"
+            [(ngModel)]="vehicle.owner_classification"
+            class="w-full rounded-lg border border-slate-300 bg-slate-50 px-4 py-3 outline-none focus:border-blue-500 focus:bg-white focus:ring-2 focus:ring-blue-100"
+          >
+
+            <option value="First">
+              First Owner
+            </option>
+
+            <option value="Second">
+              Second Owner
+            </option>
+
+            <option value="Third">
+              Third Owner
+            </option>
+
+            <option value="Fourth">
+              Fourth Owner
+            </option>
+
+          </select>
+
+        </div>
+
+
+        <!-- VARIANT NAME -->
+
+        <div>
+
+          <label class="mb-2 block text-sm font-semibold text-slate-600">
+            Variant Name
+          </label>
+
+          <input
+            type="text"
+            name="variant_name"
+            [(ngModel)]="vehicle.variant"
+            placeholder="e.g. VTEC VX"
+            class="w-full rounded-lg border border-slate-300 bg-slate-50 px-4 py-3 outline-none focus:border-blue-500 focus:bg-white focus:ring-2 focus:ring-blue-100"
+          >
+
+        </div>
+
+
+        <!-- CHASSIS -->
+
+        <div>
+
+          <label class="mb-2 block text-sm font-semibold text-slate-600">
+            Chassis Number
+          </label>
+
+          <input
+            type="text"
+            name="chassis_number"
+            [(ngModel)]="vehicle.chassis_number"
+            placeholder="17-Digit Alpha-Numeric"
+            maxlength="17"
+            class="w-full rounded-lg border border-slate-300 bg-slate-50 px-4 py-3 outline-none focus:border-blue-500 focus:bg-white focus:ring-2 focus:ring-blue-100"
+          >
+
+        </div>
+
+
+        <!-- ENGINE -->
+
+        <div>
+
+          <label class="mb-2 block text-sm font-semibold text-slate-600">
+            Engine Number
+          </label>
+
+          <input
+            type="text"
+            name="engine_number"
+            [(ngModel)]="vehicle.engine_number"
+            placeholder="Engine Serial Number"
+            class="w-full rounded-lg border border-slate-300 bg-slate-50 px-4 py-3 outline-none focus:border-blue-500 focus:bg-white focus:ring-2 focus:ring-blue-100"
+          >
+
+        </div>
+
+
+        <!-- REGISTRATION -->
+
+        <div>
+
+          <label class="mb-2 block text-sm font-semibold text-slate-600">
+            Registration Number
+          </label>
+
+          <input
+            type="text"
+            name="registration_number"
+            [(ngModel)]="vehicle.registration_number"
+            placeholder="e.g. MH02BY1234"
+            class="w-full rounded-lg border border-slate-300 bg-slate-50 px-4 py-3 uppercase outline-none focus:border-blue-500 focus:bg-white focus:ring-2 focus:ring-blue-100"
+          >
+
+        </div>
+
+
+        <!-- INSPECTION DATE -->
+
+        <div>
+
+          <label class="mb-2 block text-sm font-semibold text-slate-600">
+            Inspection Date
+          </label>
+
+          <input
+            type="date"
+            name="inspection_date"
+            [(ngModel)]="vehicle.inspection_date"
+            class="w-full rounded-lg border border-slate-300 bg-slate-50 px-4 py-3 outline-none focus:border-blue-500 focus:bg-white focus:ring-2 focus:ring-blue-100"
+          >
+
+        </div>
+
+
+        <!-- RTO -->
+
+        <div>
+
+          <label class="mb-2 block text-sm font-semibold text-slate-600">
+            RTO
+          </label>
+
+          <input
+            type="text"
+            name="rto"
+            [(ngModel)]="vehicle.rto"
+            placeholder="e.g. MH-02"
+            class="w-full rounded-lg border border-slate-300 bg-slate-50 px-4 py-3 outline-none focus:border-blue-500 focus:bg-white focus:ring-2 focus:ring-blue-100"
+          >
+
+        </div>
+
+      </div>
+
+    </div>
+
+
+
+    <!-- ======================================= -->
+    <!-- 3. VEHICLE BASIC INFO -->
+    <!-- ======================================= -->
+
+    <div class="rounded-2xl bg-white p-5 shadow-sm md:p-7">
+
+      <div class="mb-6 border-b border-slate-200 pb-4">
+
+        <h2 class="text-xl font-bold text-blue-600">
+          Vehicle Basic Info - Short Remarks
+        </h2>
+
+      </div>
+
+
+      <div class="grid grid-cols-1 gap-5 md:grid-cols-2">
+
+
+        <!-- VARIANT SHORT -->
+
+        <div>
+
+          <label class="mb-2 block text-sm font-semibold text-slate-600">
+            Variant Short Note
+          </label>
+
+          <input
+            type="text"
+            name="variant_short_note"
+            [(ngModel)]="variant_short_note"
+            placeholder="Variant details..."
+            class="w-full rounded-lg border border-slate-300 bg-slate-50 px-4 py-3 outline-none focus:border-blue-500 focus:bg-white focus:ring-2 focus:ring-blue-100"
+          >
+
+        </div>
+
+
+        <!-- RTO SHORT -->
+
+        <div>
+
+          <label class="mb-2 block text-sm font-semibold text-slate-600">
+            Registration RTO Short Note
+          </label>
+
+          <input
+            type="text"
+            name="registration_rto_short_note"
+            [(ngModel)]="registration_rto_short_note"
+            placeholder="MH-02"
+            class="w-full rounded-lg border border-slate-300 bg-slate-50 px-4 py-3 outline-none focus:border-blue-500 focus:bg-white focus:ring-2 focus:ring-blue-100"
+          >
+
+        </div>
+
+
+        <!-- SPARE KEY -->
+
+        <div>
+
+          <label class="mb-2 block text-sm font-semibold text-slate-600">
+            Spare Key Availability
+          </label>
+
+          <select
+            name="spare_key"
+            [(ngModel)]="vehicle.spare_key"
+            class="w-full rounded-lg border border-slate-300 bg-slate-50 px-4 py-3 outline-none focus:border-blue-500 focus:bg-white focus:ring-2 focus:ring-blue-100"
+          >
+
+            <option value="Yes">
+              Available
+            </option>
+
+            <option value="No">
+              Not Available
+            </option>
+
+          </select>
+
+        </div>
+
+
+        <!-- INSURANCE -->
+
+        <div>
+
+          <label class="mb-2 block text-sm font-semibold text-slate-600">
+            Insurance Type
+          </label>
+
+          <select
+            name="insurance_type"
+            [(ngModel)]="vehicle.insurance_type"
+            class="w-full rounded-lg border border-slate-300 bg-slate-50 px-4 py-3 outline-none focus:border-blue-500 focus:bg-white focus:ring-2 focus:ring-blue-100"
+          >
+
+            <option value="">
+              Select Insurance
+            </option>
+
+            <option value="Comprehensive">
+              Comprehensive
+            </option>
+
+            <option value="Third Party">
+              Third Party
+            </option>
+
+            <option value="Zero Depreciation">
+              Zero Depreciation
+            </option>
+
+          </select>
+
+        </div>
+
+
+        <!-- INSURANCE VALIDITY -->
+
+        <div>
+
+          <label class="mb-2 block text-sm font-semibold text-slate-600">
+            Insurance Validity
+          </label>
+
+          <input
+            type="date"
+            name="insurance_validity"
+            [(ngModel)]="vehicle.insurance_validity"
+            class="w-full rounded-lg border border-slate-300 bg-slate-50 px-4 py-3 outline-none focus:border-blue-500 focus:bg-white focus:ring-2 focus:ring-blue-100"
+          >
+
+        </div>
+
+
+        <!-- PRICE NOTE -->
+
+        <div>
+
+          <label class="mb-2 block text-sm font-semibold text-slate-600">
+            Price Short Note
+          </label>
+
+          <input
+            type="text"
+            name="price_short_note"
+            [(ngModel)]="price_short_note"
+            placeholder="Negotiable"
+            class="w-full rounded-lg border border-slate-300 bg-slate-50 px-4 py-3 outline-none focus:border-blue-500 focus:bg-white focus:ring-2 focus:ring-blue-100"
+          >
+
+        </div>
+
+      </div>
+
+    </div>
+
+
+
+    <!-- ======================================= -->
+    <!-- 4. VEHICLE BASIC IMAGES -->
+    <!-- ======================================= -->
+
+    <div class="rounded-2xl bg-white p-5 shadow-sm md:p-7">
+
+      <div class="mb-6 border-b border-slate-200 pb-4">
+
+        <h2 class="text-xl font-bold text-blue-600">
+          📷 Vehicle Basic Images
+        </h2>
+
+        <p class="mt-1 text-sm text-slate-500">
+          Select high-quality images for each required slot.
+        </p>
+
+      </div>
+
+
+      <div class="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
+
+
+        @for (
+          image of imageFiles;
+          track $index
+        ) {
+
+          <div>
+
+            @if (image.preview) {
+
+              <div class="overflow-hidden rounded-xl border border-slate-200 bg-slate-50">
+
+                <img
+                  [src]="image.preview"
+                  [alt]="imageLabels[$index]"
+                  class="h-40 w-full object-cover"
+                >
+
+                <div class="flex items-center justify-between gap-2 p-3">
+
+                  <span class="text-xs font-semibold text-slate-600">
+                    {{ imageLabels[$index] }}
+                  </span>
+
+                  <button
+                    type="button"
+                    (click)="removeImage($index)"
+                    class="text-xs font-semibold text-red-500 hover:text-red-700"
+                  >
+                    Remove
+                  </button>
+
+                </div>
+
+              </div>
+
+            } @else {
+
+              <label
+                class="flex h-40 cursor-pointer flex-col items-center justify-center rounded-xl border-2 border-dashed border-slate-300 bg-slate-50 text-center transition hover:border-blue-400 hover:bg-blue-50"
+              >
+
+                <input
+                  type="file"
+                  accept="image/*"
+                  hidden
+                  (change)="onImageSelected($event, $index)"
+                >
+
+                <span class="text-3xl">
+                  📷
+                </span>
+
+                <span class="mt-2 text-sm font-semibold text-slate-600">
+                  {{ imageLabels[$index] }}
+                </span>
+
+                <span class="mt-1 text-xs text-slate-400">
+                  Click to upload
+                </span>
+
+              </label>
+
+            }
+
+          </div>
+
+        }
+
+      </div>
+
+    </div>
+
+
+
+    <!-- ======================================= -->
+    <!-- 5. INSPECTION CHECKLIST -->
+    <!-- ======================================= -->
+
+    <div class="rounded-2xl bg-white p-5 shadow-sm md:p-7">
+
+      <div class="mb-6 border-b border-slate-200 pb-4">
+
+        <h2 class="text-xl font-bold text-blue-600">
+          📋 9-Category Inspection Checklist
+        </h2>
+
+        <p class="mt-1 text-sm text-slate-500">
+          Check the condition of every major vehicle component.
+        </p>
+
+      </div>
+
+
+      <div class="grid grid-cols-1 gap-5 md:grid-cols-2">
+
+
+        <!-- EXTERIOR -->
+
+        <div class="rounded-2xl border border-slate-200 bg-slate-50 p-5">
+
+          <h3 class="mb-4 text-lg font-bold text-slate-800">
+            Exterior
+          </h3>
+
+          <select
+            name="exterior_status"
+            [(ngModel)]="checklist.exterior.status"
+            class="mb-3 w-full rounded-lg border border-slate-300 bg-white px-4 py-3 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
+          >
+
+            <option value="Good">
+              Good
+            </option>
+
+            <option value="Average">
+              Average
+            </option>
+
+            <option value="Poor">
+              Poor
+            </option>
+
+          </select>
+
+          <textarea
+            name="exterior_remark"
+            [(ngModel)]="checklist.exterior.remark"
+            rows="3"
+            placeholder="Remarks for exterior..."
+            class="w-full rounded-lg border border-slate-300 bg-white px-4 py-3 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
+          ></textarea>
+
+        </div>
+
+
+        <!-- INTERIOR -->
+
+        <div class="rounded-2xl border border-slate-200 bg-slate-50 p-5">
+
+          <h3 class="mb-4 text-lg font-bold text-slate-800">
+            Interior & Electricals
+          </h3>
+
+          <select
+            name="interior_status"
+            [(ngModel)]="checklist.interior_electricals.status"
+            class="mb-3 w-full rounded-lg border border-slate-300 bg-white px-4 py-3 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
+          >
+
+            <option value="Good">
+              Good
+            </option>
+
+            <option value="Average">
+              Average
+            </option>
+
+            <option value="Poor">
+              Poor
+            </option>
+
+          </select>
+
+          <textarea
+            name="interior_remark"
+            [(ngModel)]="checklist.interior_electricals.remark"
+            rows="3"
+            placeholder="Remarks for interior & electricals..."
+            class="w-full rounded-lg border border-slate-300 bg-white px-4 py-3 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
+          ></textarea>
+
+        </div>
+
+
+        <!-- ENGINE BAY -->
+
+        <div class="rounded-2xl border border-slate-200 bg-slate-50 p-5">
+
+          <h3 class="mb-4 text-lg font-bold text-slate-800">
+            Engine Bay
+          </h3>
+
+          <select
+            name="engine_bay_status"
+            [(ngModel)]="checklist.engine_bay.status"
+            class="mb-3 w-full rounded-lg border border-slate-300 bg-white px-4 py-3 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
+          >
+
+            <option value="Good">
+              Good
+            </option>
+
+            <option value="Average">
+              Average
+            </option>
+
+            <option value="Poor">
+              Poor
+            </option>
+
+          </select>
+
+          <textarea
+            name="engine_bay_remark"
+            [(ngModel)]="checklist.engine_bay.remark"
+            rows="3"
+            placeholder="Remarks for engine bay..."
+            class="w-full rounded-lg border border-slate-300 bg-white px-4 py-3 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
+          ></textarea>
+
+        </div>
+
+
+        <!-- TRANSMISSION -->
+
+        <div class="rounded-2xl border border-slate-200 bg-slate-50 p-5">
+
+          <h3 class="mb-4 text-lg font-bold text-slate-800">
+            Transmission System
+          </h3>
+
+          <select
+            name="transmission_status"
+            [(ngModel)]="checklist.transmission_system.status"
+            class="mb-3 w-full rounded-lg border border-slate-300 bg-white px-4 py-3 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
+          >
+
+            <option value="Good">
+              Good
+            </option>
+
+            <option value="Average">
+              Average
+            </option>
+
+            <option value="Poor">
+              Poor
+            </option>
+
+          </select>
+
+          <textarea
+            name="transmission_remark"
+            [(ngModel)]="checklist.transmission_system.remark"
+            rows="3"
+            placeholder="Remarks for transmission system..."
+            class="w-full rounded-lg border border-slate-300 bg-white px-4 py-3 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
+          ></textarea>
+
+        </div>
+
+
+        <!-- SUSPENSION -->
+
+        <div class="rounded-2xl border border-slate-200 bg-slate-50 p-5">
+
+          <h3 class="mb-4 text-lg font-bold text-slate-800">
+            Suspension & Steering
+          </h3>
+
+          <select
+            name="suspension_status"
+            [(ngModel)]="checklist.suspension_steering.status"
+            class="mb-3 w-full rounded-lg border border-slate-300 bg-white px-4 py-3 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
+          >
+
+            <option value="Good">
+              Good
+            </option>
+
+            <option value="Average">
+              Average
+            </option>
+
+            <option value="Poor">
+              Poor
+            </option>
+
+          </select>
+
+          <textarea
+            name="suspension_remark"
+            [(ngModel)]="checklist.suspension_steering.remark"
+            rows="3"
+            placeholder="Remarks for suspension & steering..."
+            class="w-full rounded-lg border border-slate-300 bg-white px-4 py-3 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
+          ></textarea>
+
+        </div>
+
+
+        <!-- BRAKING -->
+
+        <div class="rounded-2xl border border-slate-200 bg-slate-50 p-5">
+
+          <h3 class="mb-4 text-lg font-bold text-slate-800">
+            Braking System
+          </h3>
+
+          <select
+            name="braking_status"
+            [(ngModel)]="checklist.braking_system.status"
+            class="mb-3 w-full rounded-lg border border-slate-300 bg-white px-4 py-3 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
+          >
+
+            <option value="Good">
+              Good
+            </option>
+
+            <option value="Average">
+              Average
+            </option>
+
+            <option value="Poor">
+              Poor
+            </option>
+
+          </select>
+
+          <textarea
+            name="braking_remark"
+            [(ngModel)]="checklist.braking_system.remark"
+            rows="3"
+            placeholder="Remarks for braking system..."
+            class="w-full rounded-lg border border-slate-300 bg-white px-4 py-3 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
+          ></textarea>
+
+        </div>
+
+
+        <!-- TIRES -->
+
+        <div class="rounded-2xl border border-slate-200 bg-slate-50 p-5">
+
+          <h3 class="mb-4 text-lg font-bold text-slate-800">
+            Tires & Wheels
+          </h3>
+
+          <select
+            name="tires_status"
+            [(ngModel)]="checklist.tires_wheels.status"
+            class="mb-3 w-full rounded-lg border border-slate-300 bg-white px-4 py-3 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
+          >
+
+            <option value="Good">
+              Good
+            </option>
+
+            <option value="Average">
+              Average
+            </option>
+
+            <option value="Poor">
+              Poor
+            </option>
+
+          </select>
+
+          <textarea
+            name="tires_remark"
+            [(ngModel)]="checklist.tires_wheels.remark"
+            rows="3"
+            placeholder="Remarks for tires & wheels..."
+            class="w-full rounded-lg border border-slate-300 bg-white px-4 py-3 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
+          ></textarea>
+
+        </div>
+
+
+        <!-- ELECTRICAL -->
+
+        <div class="rounded-2xl border border-slate-200 bg-slate-50 p-5">
+
+          <h3 class="mb-4 text-lg font-bold text-slate-800">
+            Electricals & AC
+          </h3>
+
+          <select
+            name="electrical_status"
+            [(ngModel)]="checklist.electricals_ac.status"
+            class="mb-3 w-full rounded-lg border border-slate-300 bg-white px-4 py-3 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
+          >
+
+            <option value="Good">
+              Good
+            </option>
+
+            <option value="Average">
+              Average
+            </option>
+
+            <option value="Poor">
+              Poor
+            </option>
+
+          </select>
+
+          <textarea
+            name="electrical_remark"
+            [(ngModel)]="checklist.electricals_ac.remark"
+            rows="3"
+            placeholder="Remarks for electricals & AC..."
+            class="w-full rounded-lg border border-slate-300 bg-white px-4 py-3 outline-none focus:border-blue-500 focus:bg-white focus:ring-2 focus:ring-blue-100"
+          ></textarea>
+
+        </div>
+
+
+        <!-- DOCUMENTS -->
+
+        <div class="rounded-2xl border border-slate-200 bg-slate-50 p-5">
+
+          <h3 class="mb-4 text-lg font-bold text-slate-800">
+            Documents & Title
+          </h3>
+
+          <select
+            name="documents_status"
+            [(ngModel)]="checklist.documents_title.status"
+            class="mb-3 w-full rounded-lg border border-slate-300 bg-white px-4 py-3 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
+          >
+
+            <option value="Good">
+              Good
+            </option>
+
+            <option value="Average">
+              Average
+            </option>
+
+            <option value="Poor">
+              Poor
+            </option>
+
+          </select>
+
+          <textarea
+            name="documents_remark"
+            [(ngModel)]="checklist.documents_title.remark"
+            rows="3"
+            placeholder="Remarks for documents & title..."
+            class="w-full rounded-lg border border-slate-300 bg-white px-4 py-3 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
+          ></textarea>
+
+        </div>
+
+      </div>
+
+    </div>
+
+
+
+    <!-- ======================================= -->
+    <!-- 6. VEHICLE REMARKS -->
+    <!-- ======================================= -->
+
+    <div class="rounded-2xl bg-white p-5 shadow-sm md:p-7">
+
+      <div class="mb-6 border-b border-slate-200 pb-4">
+
+        <h2 class="text-xl font-bold text-blue-600">
+          Vehicle Remarks
+        </h2>
+
+      </div>
+
+
+      <!-- VEHICLE NOTE -->
+
+      <div class="mb-5">
+
+        <label class="mb-2 block text-sm font-semibold text-slate-600">
+          Vehicle Note
+        </label>
+
+        <textarea
+          name="vehicle_note"
+          [(ngModel)]="vehicle.vehicle_note"
+          rows="4"
+          placeholder="Enter vehicle remarks..."
+          class="w-full rounded-lg border border-slate-300 bg-slate-50 px-4 py-3 outline-none focus:border-blue-500 focus:bg-white focus:ring-2 focus:ring-blue-100"
+        ></textarea>
+
+      </div>
+
+
+      <!-- ENGINE REMARK -->
+
+      <div class="mb-5">
+
+        <label class="mb-2 block text-sm font-semibold text-slate-600">
+          Engine Remark
+        </label>
+
+        <input
+          type="text"
+          name="engine_remark"
+          [(ngModel)]="engine_remark"
+          placeholder="Runs extremely smooth."
+          class="w-full rounded-lg border border-slate-300 bg-slate-50 px-4 py-3 outline-none focus:border-blue-500 focus:bg-white focus:ring-2 focus:ring-blue-100"
+        >
+
+      </div>
+
+
+      <!-- OVERALL REMARK -->
+
+      <div>
+
+        <label class="mb-2 block text-sm font-semibold text-slate-600">
+          Overall Remark
+        </label>
+
+        <textarea
+          name="overall_remark"
+          [(ngModel)]="overall_remark"
+          rows="4"
+          placeholder="Enter overall inspection remark..."
+          class="w-full rounded-lg border border-slate-300 bg-slate-50 px-4 py-3 outline-none focus:border-blue-500 focus:bg-white focus:ring-2 focus:ring-blue-100"
+        ></textarea>
+
+      </div>
+
+    </div>
+
+
+
+    <!-- ======================================= -->
+    <!-- 7. STATUS -->
+    <!-- ======================================= -->
+
+    <div class="rounded-2xl bg-white p-5 shadow-sm md:p-7">
+
+      <div class="mb-5">
+
+        <h2 class="text-xl font-bold text-blue-600">
+          Vehicle Status
+        </h2>
+
+      </div>
+
+
+      <div class="max-w-md">
+
+        <label class="mb-2 block text-sm font-semibold text-slate-600">
+          Status
+        </label>
+
+        <select
+          name="status"
+          [(ngModel)]="vehicle.status"
+          class="w-full rounded-lg border border-slate-300 bg-slate-50 px-4 py-3 outline-none focus:border-blue-500 focus:bg-white focus:ring-2 focus:ring-blue-100"
+        >
+
+          <option value="Draft">
+            Draft
+          </option>
+
+          <option value="Published">
+            Published
+          </option>
+
+          <option value="Available">
+            Available
+          </option>
+
+          <option value="Sold">
+            Sold
+          </option>
+
+          <option value="Inactive">
+            Inactive
+          </option>
+
+        </select>
+
+      </div>
+
+    </div>
+
+
+
+    <!-- ======================================= -->
+    <!-- 8. OVERALL SCORE -->
+    <!-- ======================================= -->
+
+    <div class="rounded-2xl border border-slate-200 bg-slate-50 p-6">
+
+      <div class="flex flex-col gap-5 md:flex-row md:items-center md:justify-between">
+
+        <div>
+
+          <h2 class="text-lg font-bold text-slate-700">
+            Overall Score Adjuster (1.0 to 10.0)
+          </h2>
+
+          <p class="mt-1 text-sm text-slate-500">
+            Calculated average condition rating:
+            <strong class="text-slate-700">
+              {{ scoreDisplay }} / 10
+            </strong>
+          </p>
+
+        </div>
+
+
+        <div class="text-5xl font-extrabold text-blue-500">
+          {{ scoreDisplay }}
+        </div>
+
+      </div>
+
+
+      <input
+        type="range"
+        name="overall_score"
+        [(ngModel)]="overall_score"
+        min="1"
+        max="10"
+        step="0.1"
+        class="mt-6 w-full accent-blue-500"
+      >
+
+
+      <div class="flex justify-between text-xs text-slate-400">
+
+        <span>
+          1.0
+        </span>
+
+        <span>
+          10.0
+        </span>
+
+      </div>
+
+    </div>
+
+
+
+ <!-- ======================================= -->
+<!-- 9. BUTTONS -->
+<!-- ======================================= -->
+
+<div
+  class="flex flex-col-reverse gap-3 border-t border-slate-200 pt-6 sm:flex-row sm:justify-end"
+>
+
+  <button
+    type="button"
+    (click)="cancel()"
+    class="rounded-lg border border-slate-300 bg-white px-6 py-3 font-semibold text-slate-700 transition hover:bg-slate-100"
+  >
+    Cancel
+  </button>
+
+
+  <button
+    type="button"
+    (click)="resetForm()"
+    class="rounded-lg border border-red-200 bg-red-50 px-6 py-3 font-semibold text-red-600 transition hover:bg-red-100"
+  >
+    Reset Form
+  </button>
+
+
+  <button
+    type="submit"
+    [disabled]="loading"
+    class="rounded-lg bg-gradient-to-r from-blue-500 to-purple-600 px-7 py-3 font-semibold text-white transition hover:from-blue-600 hover:to-purple-700 disabled:cursor-not-allowed disabled:opacity-50"
+  >
+
+    @if (loading) {
+
+      Adding Vehicle...
+
+    } @else {
+
+      Publish Vehicle
+
+    }
+
+  </button>
+
+</div>
+
+
+<!-- ======================================= -->
+<!-- CLOSE MAIN VEHICLE FORM -->
+<!-- ======================================= -->
+
+</form>
+
+
+<!-- ===================================================== -->
+<!-- CUSTOMER COMMUNICATION AFTER PUBLISH -->
+<!-- ===================================================== -->
+
+@if (showCustomerCommunication) {
+
+  <div
+    class="mt-6 rounded-2xl border border-green-200 bg-green-50 p-5 shadow-sm md:p-7"
+  >
+
+    <div class="mb-6">
+
+      <h2
+        class="text-xl font-bold text-green-700"
+      >
+        ✅ Vehicle Published Successfully
+      </h2>
+
+      <p
+        class="mt-1 text-sm text-green-700"
+      >
+        Vehicle ki PDF generate ho chuki hai aur admin ko
+        automatically send ho gayi hai.
+      </p>
+
+    </div>
+
+
+    <!-- ================================================= -->
+    <!-- CUSTOMER EMAIL -->
+    <!-- ================================================= -->
+
+    <div
+      class="mb-5 rounded-xl border border-slate-200 bg-white p-5"
+    >
+
+      <h3
+        class="mb-4 text-lg font-bold text-slate-800"
+      >
+        📧 Send PDF to Customer Email
+      </h3>
+
+
+      <label
+        class="mb-2 block text-sm font-semibold text-slate-600"
+      >
+        Customer Email
+      </label>
+
+
+      <div
+        class="flex flex-col gap-3 md:flex-row"
+      >
+
+        <input
+          type="email"
+          name="send_customer_email"
+          [(ngModel)]="customerEmail"
+          placeholder="customer@gmail.com"
+          class="flex-1 rounded-lg border border-slate-300 bg-slate-50 px-4 py-3 outline-none focus:border-blue-500 focus:bg-white focus:ring-2 focus:ring-blue-100"
+        >
+
+
+        <button
+          type="button"
+          (click)="sendCustomerEmail()"
+          [disabled]="sendingCustomerEmail"
+          class="rounded-lg bg-blue-600 px-6 py-3 font-semibold text-white hover:bg-blue-700 disabled:cursor-not-allowed disabled:opacity-50"
+        >
+
+          @if (sendingCustomerEmail) {
+
+            Sending PDF...
+
+          } @else {
+
+            📧 Send PDF
+
+          }
+
+        </button>
+
+      </div>
+
+
+      @if (customerEmailSuccess) {
+
+        <div
+          class="mt-3 rounded-lg border border-green-200 bg-green-50 p-3 text-sm font-semibold text-green-700"
+        >
+
+          ✅ {{ customerEmailSuccess }}
+
+        </div>
+
+      }
+
+
+      @if (customerEmailError) {
+
+        <div
+          class="mt-3 rounded-lg border border-red-200 bg-red-50 p-3 text-sm font-semibold text-red-700"
+        >
+
+          ❌ {{ customerEmailError }}
+
+        </div>
+
+      }
+
+    </div>
+
+
+    <!-- ================================================= -->
+    <!-- WHATSAPP -->
+    <!-- ================================================= -->
+
+    <div
+      class="rounded-xl border border-slate-200 bg-white p-5"
+    >
+
+      <h3
+        class="mb-4 text-lg font-bold text-slate-800"
+      >
+        🟢 Send PDF on WhatsApp
+      </h3>
+
+
+      <label
+        class="mb-2 block text-sm font-semibold text-slate-600"
+      >
+        Customer WhatsApp Number
+      </label>
+
+
+      <div
+        class="flex flex-col gap-3 md:flex-row"
+      >
+
+        <input
+          type="tel"
+          name="send_customer_whatsapp"
+          [(ngModel)]="customerWhatsApp"
+          placeholder="919876543210"
+          class="flex-1 rounded-lg border border-slate-300 bg-slate-50 px-4 py-3 outline-none focus:border-green-500 focus:bg-white focus:ring-2 focus:ring-green-100"
+        >
+
+
+        <button
+          type="button"
+          (click)="sendCustomerWhatsApp()"
+          class="rounded-lg bg-green-600 px-6 py-3 font-semibold text-white hover:bg-green-700"
+        >
+
+          🟢 Open WhatsApp
+
+        </button>
+
+      </div>
+
+
+      <p
+        class="mt-3 text-xs text-slate-500"
+      >
+        WhatsApp abhi customer ke chat ko open karega.
+        Actual PDF attachment automatically WhatsApp par bhejne ke liye
+        WhatsApp Business Cloud API connect karni hogi.
+      </p>
+
+    </div>
+
+  </div>
+
+}
+
+
+<!-- MAIN PAGE CLOSE -->
+
+
+</div>
