@@ -2,10 +2,12 @@
   "services": {
     "frontend": {
       "root": "frontend",
-      "framework": "angular"
+      "framework": "angular",
+      "outputDirectory": "dist/frontend"
     },
     "backend": {
       "root": "backend",
+      "framework": "express",
       "entrypoint": "server.js"
     }
   },
